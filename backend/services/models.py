@@ -60,7 +60,7 @@ class CleanupResponse(BaseModel):
 
 # Story length configurations
 LENGTH_CONFIG = {
-    "short": {"scenes": 10, "words_per_scene": 80},
-    "medium": {"scenes": 20, "words_per_scene": 100},
-    "long": {"scenes": 30, "words_per_scene": 120}
+    "short": {"scenes": 6, "words_per_scene": 80},
+    "medium": {"scenes": 12, "words_per_scene": 90},
+    "long": {"scenes": 18, "words_per_scene": 100}
 }
