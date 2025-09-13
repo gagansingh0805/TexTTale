@@ -108,3 +108,4 @@ tempCodeRunnerFile.py
 *.m4a
 node_modules
 
+.vercel
