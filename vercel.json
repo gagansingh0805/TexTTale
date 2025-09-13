@@ -9,7 +9,15 @@
       }
     },
     {
-      "src": "api/**/*.py",
+      "src": "api/generate-story.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/text-to-speech.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "api/story-options.py",
       "use": "@vercel/python"
     }
   ],
