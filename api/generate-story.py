@@ -1,12 +1,5 @@
-import os
-import sys
 import json
 from http.server import BaseHTTPRequestHandler
-
-# Add the backend directory to Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'backend'))
-
-from services import story_service, StoryRequest, StoryResponse
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -16,62 +9,35 @@ class handler(BaseHTTPRequestHandler):
             post_data = self.rfile.read(content_length)
             data = json.loads(post_data.decode('utf-8'))
             
-            # Create StoryRequest object
-            request = StoryRequest(**data)
+            # Simple test story generation
+            test_story = [
+                {
+                    "text": f"Once upon a time, {data.get('text', 'there was a magical adventure')}...",
+                    "sceneNumber": 1,
+                    "audioUrl": None,
+                    "backgroundNoiseUrl": None
+                },
+                {
+                    "text": "The story continued with exciting twists and turns that kept everyone on the edge of their seats.",
+                    "sceneNumber": 2,
+                    "audioUrl": None,
+                    "backgroundNoiseUrl": None
+                }
+            ]
             
-            # Validate request
-            validation = story_service.validate_story_request(
-                request.text, 
-                request.style, 
-                request.length
-            )
-            
-            if not validation["valid"]:
-                self.send_response(400)
-                self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
-                self.end_headers()
-                self.wfile.write(json.dumps({
-                    "success": False,
-                    "message": "; ".join(validation["errors"])
-                }).encode())
-                return
-            
-            # Generate story
-            result = story_service.generate_story(
-                prompt=request.text,
-                style=request.style,
-                length=request.length,
-                characters=request.characters,
-                background_noise=request.background_noise,
-                include_audio=True
-            )
-            
-            if not result["success"]:
-                self.send_response(500)
-                self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
-                self.end_headers()
-                self.wfile.write(json.dumps({
-                    "success": False,
-                    "message": result["message"]
-                }).encode())
-                return
-            
-            # Return success response
-            response = StoryResponse(
-                success=True,
-                story=result["story"],
-                characters=result["characters"],
-                introduction=result["introduction"],
-                message=result["message"]
-            )
+            response = {
+                "success": True,
+                "story": test_story,
+                "characters": ["Hero", "Villain", "Helper"],
+                "introduction": "Welcome to this amazing story!",
+                "message": "Test story generated successfully"
+            }
             
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
-            self.wfile.write(json.dumps(response.dict()).encode())
+            self.wfile.write(json.dumps(response).encode())
             
         except Exception as e:
             self.send_response(500)
@@ -80,7 +46,7 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(json.dumps({
                 "success": False,
-                "message": str(e)
+                "message": f"Error: {str(e)}"
             }).encode())
     
     def do_OPTIONS(self):
