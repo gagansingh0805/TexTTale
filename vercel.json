@@ -23,8 +23,5 @@
       "dest": "/frontend/$1"
     }
   ],
-  "env": {
-    "GEMINI_API_KEY": "@gemini_api_key"
-  },
   "buildCommand": "cd frontend && npm run build"
 }
